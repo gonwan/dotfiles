@@ -1,0 +1,105 @@
+### CentOS 7
+
+- Install prerequisites for Homebrew. It requires kernel>=3.2 and glibc>=2.13 and CentOS 7 has kernel=3.10 and glibc=2.17. As of Feb 4, 2025, the installation also requires git>=2.7.0 and curl>=7.41.0.
+```
+# sudo yum install epel-release centos-release-scl
+# sudo yum install rh-git227-git httpd24-curl
+# echo >> ~/.bashrc
+# echo 'export HOMEBREW_CURL_PATH=/opt/rh/httpd24/root/bin/curl' >> ~/.bashrc
+# echo 'export HOMEBREW_GIT_PATH=/opt/rh/rh-git227/root/bin/git' >> ~/.bashrc
+# echo 'source /opt/rh/httpd24/enable' >> ~/.bashrc
+# echo 'source /opt/rh/rh-git227/enable' >> ~/.bashrc
+# source ~/.bashrc
+```
+- There are 2 issues in Homebrew: First, the installation script filters out `LD_LIBRARY_PATH` added above. Second, the `brew` script hardcoded curl path to be `/usr/bin/curl` when downloading files, which leads to failure download from https urls. To make it use the updated curl, run:
+```
+# sudo mv /usr/bin/curl /usr/bin/curl.bak
+# sudo ln -sf /opt/rh/httpd24/root/usr/bin/curl /usr/bin/curl
+# sudo ln -sf /opt/rh/httpd24/root/usr/lib64/libcurl-httpd24.so.4 /usr/lib64/libcurl-httpd24.so.4
+# sudo ln -sf /opt/rh/httpd24/root/usr/lib64/libnghttp2-httpd24.so.14 /usr/lib64/libnghttp2-httpd24.so.14
+```
+- Now, install Homebrew:
+```
+# /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bashrc
+# source ~/.bashrc
+```
+- Upgrade bash, it is required when running oh-my-posh. oh-my-posh dropped support for bash 4.x around Aug 2024. **Logout and login** your user session to make shell switch to take effect.
+```
+# brew install bash
+# echo '/home/linuxbrew/.linuxbrew/bin/bash' | sudo tee -a /etc/shells
+# chsh -s /home/linuxbrew/.linuxbrew/bin/bash
+```
+- If you cannot login remotely, you are probably blocked by SELinux. Check with SETroubleshoot GUI or command line:
+```
+# sudo sealert -a /var/log/audit/audit.log
+...
+SELinux is preventing /usr/sbin/sshd from getattr access on the file /home/linuxbrew/.linuxbrew/Cellar/bash/5.2.37/bin/bash.
+...
+If you want to fix the label.
+/home/linuxbrew/.linuxbrew/Cellar/bash/5.2.37/bin/bash default label should be user_home_t.
+Then you can run restorecon. The access attempt may have been stopped due to insufficient permissions to access a parent directory in which case try to change the following command accordingly.
+Do
+# /sbin/restorecon -v /home/linuxbrew/.linuxbrew/Cellar/bash/5.2.37/bin/bash
+...
+```
+Fix it as suggested above:
+```
+# /sbin/restorecon -v /home/linuxbrew/.linuxbrew/Cellar/bash/5.2.37/bin/bash
+```
+
+- Install oh-my-posh and a nerd font. The font needs to be chosen in your terminal settings(e.g. `preferences` -> `profiles` -> `text` -> `custom font` using gnome terminal).
+```
+# brew install oh-my-posh
+# echo 'eval "$(oh-my-posh init bash)"' >> ~/.bashrc
+# source ~/.bashrc
+# brew install --cask font-dejavu-sans-mono-nerd-font
+```
+- Install tmux:
+```
+# brew install tmux
+```
+- Install neovim:
+```
+# brew install neovim
+```
+
+### NOTE
+
+neovim requires more recent version of glibc, which will be installed by Homebrew. So multiple versions of glibc are installed and managed. `patchelf` seems to be used to modify rpath of binary files.
+It complains about missing symbols when running `ldd`:
+```
+# ldd $(which nvim)
+/home/linuxbrew/.linuxbrew/bin/nvim: /lib64/libc.so.6: version `GLIBC_2.33' not found (required by /home/linuxbrew/.linuxbrew/bin/nvim)
+/home/linuxbrew/.linuxbrew/bin/nvim: /lib64/libc.so.6: version `GLIBC_2.34' not found (required by /home/linuxbrew/.linuxbrew/bin/nvim)
+/home/linuxbrew/.linuxbrew/bin/nvim: /lib64/libc.so.6: version `GLIBC_2.32' not found (required by /home/linuxbrew/.linuxbrew/bin/nvim)
+/home/linuxbrew/.linuxbrew/bin/nvim: /lib64/libm.so.6: version `GLIBC_2.29' not found (required by /home/linuxbrew/.linuxbrew/bin/nvim)
+...
+	linux-vdso.so.1 =>  (0x00007ffd8b7d2000)
+	libluv.so.1 => /home/linuxbrew/.linuxbrew/lib/libluv.so.1 (0x00007f16ffbd1000)
+	libvterm.so.0 => /home/linuxbrew/.linuxbrew/opt/libvterm/lib/libvterm.so.0 (0x00007f16ffbbc000)
+	/home/linuxbrew/.linuxbrew/opt/lpeg/lib/liblpeg.so (0x00007f16ffbaa000)
+	libmsgpack-c.so.2 => /home/linuxbrew/.linuxbrew/opt/msgpack/lib/libmsgpack-c.so.2 (0x00007f16ffb9f000)
+	libtree-sitter.so.0.24 => /home/linuxbrew/.linuxbrew/opt/tree-sitter/lib/libtree-sitter.so.0.24 (0x00007f16ffb6c000)
+	libunibilium.so.4 => /home/linuxbrew/.linuxbrew/opt/unibilium/lib/libunibilium.so.4 (0x00007f16ffb55000)
+	libluajit-5.1.so.2 => /home/linuxbrew/.linuxbrew/opt/luajit/lib/libluajit-5.1.so.2 (0x00007f16ffac5000)
+	libm.so.6 => /lib64/libm.so.6 (0x00007f16ff19d000)
+	libuv.so.1 => /home/linuxbrew/.linuxbrew/lib/libuv.so.1 (0x00007f16ffa75000)
+	libc.so.6 => /lib64/libc.so.6 (0x00007f16fedcf000)
+	libgcc_s.so.1 => /home/linuxbrew/.linuxbrew/opt/gcc/lib/gcc/current/libgcc_s.so.1 (0x00007f16ffa44000)
+	/home/linuxbrew/.linuxbrew/lib/ld.so => /lib64/ld-linux-x86-64.so.2 (0x00007f16ff9e8000)
+```
+But actually runs well. See `strace` output:
+```
+# strace nvim 2>&1 > /dev/null | grep -E 'libc.so.6|libm.so.6'
+...
+openat(AT_FDCWD, "/home/linuxbrew/.linuxbrew/Cellar/neovim/0.10.4/lib/libm.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/home/linuxbrew/.linuxbrew/opt/gcc/lib/gcc/current/libm.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+...
+openat(AT_FDCWD, "/home/linuxbrew/.linuxbrew/opt/glibc/lib/libm.so.6", O_RDONLY|O_CLOEXEC) = 3
+...
+openat(AT_FDCWD, "/home/linuxbrew/.linuxbrew/Cellar/neovim/0.10.4/lib/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/home/linuxbrew/.linuxbrew/opt/gcc/lib/gcc/current/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
+...
+openat(AT_FDCWD, "/home/linuxbrew/.linuxbrew/opt/glibc/lib/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+```
