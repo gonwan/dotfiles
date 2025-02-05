@@ -11,6 +11,7 @@
 # echo 'source /opt/rh/rh-git227/enable' >> ~/.bashrc
 # source ~/.bashrc
 ```
+
 - There are 2 issues in Homebrew: First, the installation script filters out `LD_LIBRARY_PATH` added above. Second, the `brew` script hardcoded curl path to be `/usr/bin/curl` when downloading files, which leads to failure download from https urls. To make it use the updated curl, run:
 ```
 # sudo mv /usr/bin/curl /usr/bin/curl.bak
@@ -18,18 +19,22 @@
 # sudo ln -sf /opt/rh/httpd24/root/usr/lib64/libcurl-httpd24.so.4 /usr/lib64/libcurl-httpd24.so.4
 # sudo ln -sf /opt/rh/httpd24/root/usr/lib64/libnghttp2-httpd24.so.14 /usr/lib64/libnghttp2-httpd24.so.14
 ```
+
 - Now, install Homebrew:
 ```
 # /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 # echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bashrc
 # source ~/.bashrc
 ```
-- Upgrade bash, it is required when running oh-my-posh. oh-my-posh dropped support for bash 4.x around Aug 2024. **Logout and login** your user session to make shell switch to take effect.
+
+- Upgrade bash, it is required when running oh-my-posh. oh-my-posh dropped support for bash 4.x around [Aug 2024](https://github.com/JanDeDobbeleer/oh-my-posh/issues/5685). **Logout and login** your user session to make shell switch to take effect.
 ```
-# brew install bash
+# brew install bash bash-completion@2
 # echo '/home/linuxbrew/.linuxbrew/bin/bash' | sudo tee -a /etc/shells
 # chsh -s /home/linuxbrew/.linuxbrew/bin/bash
 ```
+There is a [bug](https://github.com/Homebrew/homebrew-core/issues/158667) in the updated bash, that it does not wrap input commands(it does wrap output). If you cannot bear it, you can solve it by building bash with `ncurses` in deps.
+
 - If you cannot login remotely, you are probably blocked by SELinux. Check with SETroubleshoot GUI or command line:
 ```
 # sudo sealert -a /var/log/audit/audit.log
