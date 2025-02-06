@@ -33,7 +33,7 @@
 # echo '/home/linuxbrew/.linuxbrew/bin/bash' | sudo tee -a /etc/shells
 # chsh -s /home/linuxbrew/.linuxbrew/bin/bash
 ```
-There is a [bug](https://github.com/Homebrew/homebrew-core/issues/158667) in the updated bash, that it does not wrap input commands(it does wrap output). If you cannot bear it, you can solve it by building bash with `ncurses` in deps.
+There is a [bug](https://github.com/Homebrew/homebrew-core/issues/158667) in the updated bash, that it does not wrap input commands(it does wrap output). It should be caused by the local implementation of termcap library in bash. Ubuntu passes `TERMCAP_LIB=" -ltinfo"`(terminfo library in `ncurses`) when building bash. If you cannot bear the bug, build bash yourself with `ncurses` in deps.
 
 - If you cannot login remotely, you are probably blocked by SELinux. Check with SETroubleshoot GUI or command line:
 ```
