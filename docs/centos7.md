@@ -72,7 +72,7 @@ Fix it as suggested above:
 ### NOTE
 
 neovim requires more recent version of glibc, which will be installed by Homebrew. So multiple versions of glibc are installed and managed. `patchelf` seems to be used to modify rpath of binary files.
-It complains about missing symbols when running `ldd`:
+It complains about missing symbols when running system `ldd`:
 ```
 # ldd $(which nvim)
 /home/linuxbrew/.linuxbrew/bin/nvim: /lib64/libc.so.6: version `GLIBC_2.33' not found (required by /home/linuxbrew/.linuxbrew/bin/nvim)
@@ -94,17 +94,20 @@ It complains about missing symbols when running `ldd`:
 	libgcc_s.so.1 => /home/linuxbrew/.linuxbrew/opt/gcc/lib/gcc/current/libgcc_s.so.1 (0x00007f16ffa44000)
 	/home/linuxbrew/.linuxbrew/lib/ld.so => /lib64/ld-linux-x86-64.so.2 (0x00007f16ff9e8000)
 ```
-But actually runs well. See `strace` output:
+But actually runs well. See Homeberw `ldd` output:
 ```
-# strace nvim 2>&1 > /dev/null | grep -E 'libc.so.6|libm.so.6'
-...
-openat(AT_FDCWD, "/home/linuxbrew/.linuxbrew/Cellar/neovim/0.10.4/lib/libm.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-openat(AT_FDCWD, "/home/linuxbrew/.linuxbrew/opt/gcc/lib/gcc/current/libm.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-...
-openat(AT_FDCWD, "/home/linuxbrew/.linuxbrew/opt/glibc/lib/libm.so.6", O_RDONLY|O_CLOEXEC) = 3
-...
-openat(AT_FDCWD, "/home/linuxbrew/.linuxbrew/Cellar/neovim/0.10.4/lib/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-openat(AT_FDCWD, "/home/linuxbrew/.linuxbrew/opt/gcc/lib/gcc/current/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)
-...
-openat(AT_FDCWD, "/home/linuxbrew/.linuxbrew/opt/glibc/lib/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+# $(brew --prefix glibc)/bin/ldd $(which nvim)
+	linux-vdso.so.1 (0x00007ffe97579000)
+	libluv.so.1 => /home/linuxbrew/.linuxbrew/lib/libluv.so.1 (0x00007f47b7654000)
+	libvterm.so.0 => /home/linuxbrew/.linuxbrew/opt/libvterm/lib/libvterm.so.0 (0x00007f47b763f000)
+	/home/linuxbrew/.linuxbrew/opt/lpeg/lib/liblpeg.so (0x00007f47b762c000)
+	libmsgpack-c.so.2 => /home/linuxbrew/.linuxbrew/opt/msgpack/lib/libmsgpack-c.so.2 (0x00007f47b7621000)
+	libtree-sitter.so.0.24 => /home/linuxbrew/.linuxbrew/opt/tree-sitter/lib/libtree-sitter.so.0.24 (0x00007f47b75ee000)
+	libunibilium.so.4 => /home/linuxbrew/.linuxbrew/opt/unibilium/lib/libunibilium.so.4 (0x00007f47b75d8000)
+	libluajit-5.1.so.2 => /home/linuxbrew/.linuxbrew/opt/luajit/lib/libluajit-5.1.so.2 (0x00007f47b7548000)
+	libm.so.6 => /home/linuxbrew/.linuxbrew/opt/glibc/lib/libm.so.6 (0x00007f47b7464000)
+	libuv.so.1 => /home/linuxbrew/.linuxbrew/lib/libuv.so.1 (0x00007f47b7428000)
+	libc.so.6 => /home/linuxbrew/.linuxbrew/opt/glibc/lib/libc.so.6 (0x00007f47b7217000)
+	libgcc_s.so.1 => /home/linuxbrew/.linuxbrew/opt/gcc/lib/gcc/current/libgcc_s.so.1 (0x00007f47b71e7000)
+	/home/linuxbrew/.linuxbrew/lib/ld.so => /home/linuxbrew/.linuxbrew/Cellar/glibc/2.35_1/lib64/ld-linux-x86-64.so.2 (0x00007f47b7bd5000)
 ```
