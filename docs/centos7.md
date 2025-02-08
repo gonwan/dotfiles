@@ -33,7 +33,8 @@
 # echo '/home/linuxbrew/.linuxbrew/bin/bash' | sudo tee -a /etc/shells
 # chsh -s /home/linuxbrew/.linuxbrew/bin/bash
 ```
-There is a [bug](https://github.com/Homebrew/homebrew-core/issues/158667) in the updated bash, that it does not wrap input commands(it does wrap output). It should be caused by the local implementation of termcap library in bash. Ubuntu passes `TERMCAP_LIB=" -ltinfo"`(terminfo library in `ncurses`) when building bash. If you cannot bear the bug, build bash yourself with `ncurses` in deps.
+There is a [bug](https://github.com/Homebrew/homebrew-core/issues/158667) in the updated bash, that it does not wrap input commands(it does wrap output). It should be caused by the local implementation of termcap library in bash. Ubuntu passes `TERMCAP_LIB=" -ltinfo"`(terminfo library in `ncurses`) when building bash. If you cannot bear the bug, build bash yourself with `ncurses` in deps. The stock `vim` and `manpage` also complains about term features. Install `vim` and `less` brew package to resolve.
+Also make sure the `$SHELL` env prints the Homebrew bash path. Some terminal app like gnome-terminal set `$SHELL` to `bash` by default. Go to `preferences` -> `profiles` -> `command` -> check `run command as a login shell`.
 
 - If you cannot login remotely, you are probably blocked by SELinux. Check with SETroubleshoot GUI or command line:
 ```
@@ -48,9 +49,9 @@ Do
 # /sbin/restorecon -v /home/linuxbrew/.linuxbrew/Cellar/bash/5.2.37/bin/bash
 ...
 ```
-Fix it as suggested above:
+Fix it as suggested above. Better to disable SELinux, since it leads to so many issues. Just disable it by editing `/etc/selinux/config`, change line to `SELINUX=disabled`. Reboot or simply disable SELinux in current session:
 ```
-# /sbin/restorecon -v /home/linuxbrew/.linuxbrew/Cellar/bash/5.2.37/bin/bash
+# sudo setenforce 0
 ```
 
 - Install oh-my-posh and a nerd font. The font needs to be chosen in your terminal settings(e.g. `preferences` -> `profiles` -> `text` -> `custom font` using gnome terminal).
