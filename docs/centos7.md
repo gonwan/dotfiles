@@ -49,7 +49,7 @@ Do
 # /sbin/restorecon -v /home/linuxbrew/.linuxbrew/Cellar/bash/5.2.37/bin/bash
 ...
 ```
-Fix it as suggested above. Better to disable SELinux, since it leads to so many issues. Just disable it by editing `/etc/selinux/config`, change line to `SELINUX=disabled`. Reboot or simply disable SELinux in current session:
+Fix it as suggested above. Better disable SELinux, since it leads to so many issues. Disable it by editing `/etc/selinux/config`, change line to `SELINUX=disabled`. Reboot or simply disable SELinux in current session:
 ```
 # sudo setenforce 0
 ```
