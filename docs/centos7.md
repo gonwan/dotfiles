@@ -54,7 +54,7 @@ Fix it as suggested above. Better disable SELinux, since it leads to so many iss
 # sudo setenforce 0
 ```
 
-- Install oh-my-posh and a nerd font. The font needs to be chosen in your terminal settings(e.g. `preferences` -> `profiles` -> `text` -> `custom font` using gnome terminal).
+- Install oh-my-posh and a nerd font. The font needs to be chosen in your terminal settings(e.g. `preferences` -> `profiles` -> `text` -> `custom font` using gnome terminal). Select the `non-mono`(double-width) version of the font. The icon may seems too small using the `mono`(single-width) version. See [here](https://github.com/Powerlevel9k/powerlevel9k/issues/430). If it is not possible to select the `non-mono` version, try install `font-jetbrains-mono-nerd-font` instead, or do it by setting font alias to `monospace` in fontconfig system.
 ```
 # brew install oh-my-posh
 # echo 'eval "$(oh-my-posh init bash)"' >> ~/.bashrc
