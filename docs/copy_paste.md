@@ -12,12 +12,23 @@ Clearest and most simplest case, just use the function provided by your OS or te
   - copy: mouse select for copy
   - paste: mouse middle-click
 
-
 #### Tmux
 
-Tmux has built-in copy mode. It also supports `OSC 52` for copy [out of box](https://github.com/tmux/tmux/wiki/Clipboard). Copy function even works over SSH. Plugins like [tmux-yank](https://github.com/tmux-plugins/tmux-yank) seem to be not necessary these days. They use external tools like `xsel` and `xclip` to sync with host clipboard, and do not work over SSH.
+Tmux has built-in copy mode. It also supports `OSC 52` for copy [out of box](https://github.com/tmux/tmux/wiki/Clipboard). Copy function even works over SSH. Plugins like [tmux-yank](https://github.com/tmux-plugins/tmux-yank) seem to be not necessary these days. They use external tools like `xsel` and `xclip` to sync with host clipboard, and do not work over SSH. Here is the flowchat:
 
-A compatible client is **required**. Windows Terminal and [WezTerm](https://github.com/wezterm/wezterm), [Alacritty](https://github.com/alacritty/alacritty) and even `xterm` support `OSC 52`, while [VTE-based](https://wiki.archlinux.org/title/List_of_applications/Utilities#VTE-based) terminals including Gnome Terminal, Xfce Terminal [do not](https://gitlab.gnome.org/GNOME/vte/-/issues/2495). Remote copy does not work in these terminals. In this case, `tmux-yank` may help.
+```mermaid
+flowchart LR
+  subgraph Windows
+    WT --> WC[windows clipboard]
+  end
+  subgraph Linux
+    neovim --> xsel --> LC[linux clipboard]
+    neovim --> osc52
+  end
+  osc52 --> WT[windows terminal]
+```
+
+A compatible client is **required**. Windows Terminal and [WezTerm](https://github.com/wezterm/wezterm), [Alacritty](https://github.com/alacritty/alacritty) and even `xterm` support `OSC 52`, while [VTE-based](https://wiki.archlinux.org/title/List_of_applications/Utilities#VTE-based) terminals including Gnome Terminal, Xfce Terminal [do not](https://gitlab.gnome.org/GNOME/vte/-/issues/2495). Remote copy does not work in these terminals. In this case, `tmux-yank` may help. P.S., WezTerm requires 3D acceleration if used in a VM.
 
 To check whether your terminal client supports `OSC 52`, run following command in remote shell, and check your local clipboard:
 
@@ -63,4 +74,3 @@ Now, the Neovim clipboard should sync with your local clipboard.
 #### Paste
 
 Windows Terminal does not support `OSC 52` paste for security reasons. Other terminal clients may have same concerns. Just use the shortcut provided in the first section.
-
