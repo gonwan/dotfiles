@@ -33,7 +33,7 @@
 # echo '/home/linuxbrew/.linuxbrew/bin/bash' | sudo tee -a /etc/shells
 # chsh -s /home/linuxbrew/.linuxbrew/bin/bash
 ```
-There is a [bug](https://github.com/Homebrew/homebrew-core/issues/158667) in the updated bash, that it does not wrap input commands(it does wrap output). It should be caused by the local implementation of termcap library in bash. Ubuntu passes `TERMCAP_LIB=" -ltinfo"`(terminfo library in `ncurses`) when building bash. If you cannot bear the bug, build bash yourself with `ncurses` in deps. The stock `vim` and `manpage` also complains about term features. Install `vim` and `less` brew package to resolve.
+There is a [bug](https://github.com/Homebrew/homebrew-core/issues/158667) in the updated bash, that it does not wrap input commands(it does wrap output). It should be caused by the local implementation of termcap library in bash. Ubuntu passes `TERMCAP_LIB=" -ltinfo"`(terminfo library in `ncurses`) when building bash. If you cannot bear the bug, build bash yourself with `ncurses` in deps. The stock `vim` and `manpage` also complains about term features. Install `vim` and `less` brew package to resolve. The bug is fixed as of Feb 11, 2025.
 Also make sure the `$SHELL` env prints the Homebrew bash path. Some terminal app like gnome-terminal set `$SHELL` to `bash` by default. Go to `preferences` -> `profiles` -> `command` -> check `run command as a login shell`.
 
 - If you cannot login remotely, you are probably blocked by SELinux. Check with SETroubleshoot GUI or command line:
@@ -70,7 +70,7 @@ Fix it as suggested above. Better disable SELinux, since it leads to so many iss
 # brew install neovim
 ```
 
-### NOTE
+#### NOTE
 
 neovim requires more recent version of glibc, which will be installed by Homebrew. So multiple versions of glibc are installed and managed. `patchelf` seems to be used to modify rpath of binary files.
 It complains about missing symbols when running system `ldd`:
