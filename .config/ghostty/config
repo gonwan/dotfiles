@@ -1,0 +1,8 @@
+cursor-style = block
+shell-integration-features = no-cursor
+font-feature = -calt, -liga, -dlig
+font-size = 10
+gtk-wide-tabs = false
+gtk-titlebar-style = tabs
+theme = Catppuccin Mocha
+window-theme = dark

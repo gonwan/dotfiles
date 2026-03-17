@@ -1,0 +1,143 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "blocks": [
+    {
+      "alignment": "left",
+      "segments": [
+        {
+          "foreground": "#c6a0f6",
+          "style": "plain",
+          "template": "\u256d\u2500",
+          "type": "text"
+        },
+        {
+          "foreground": "#c6a0f6",
+          "style": "plain",
+          "options": {
+            "linuxmint": "\uf30e"
+          },
+          "template": " {{.Icon}} ",
+          "type": "os"
+        },
+        {
+          "foreground": "#c6a0f6",
+          "style": "plain",
+          "template": "{{ .UserName }}@{{ .HostName }} ",
+          "type": "session"
+        },
+        {
+          "foreground": "#ee99a0",
+          "style": "plain",
+          "options": {
+            "style": "full"
+          },
+          "template": "\uf07b {{ .Path }} ",
+          "type": "path"
+        },
+        {
+          "foreground": "#f5a97f",
+          "style": "plain",
+          "options": {
+            "branch_icon": "\ue725 ",
+            "fetch_status": true,
+            "fetch_upstream_icon": true
+          },
+          "template": "{{ .UpstreamIcon }}  {{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }}<#ef5350> \uf046 {{ .Staging.String }}</>{{ end }} ",
+          "type": "git"
+        }
+      ],
+      "type": "prompt"
+    },
+    {
+      "alignment": "right",
+      "segments": [
+        {
+          "foreground": "#a6da95",
+          "style": "plain",
+          "template": " \ue718 {{ .Full }} ",
+          "trailing_diamond": "\ue0b4 ",
+          "type": "node"
+        },
+        {
+          "foreground": "#a6da95",
+          "style": "plain",
+          "template": " \ue235 {{ if .Error }}{{ .Error }}{{ else }}{{ if .Venv }}{{ .Venv }} {{ end }}{{ .Full }}{{ end }} ",
+          "trailing_diamond": "\ue0b4 ",
+          "type": "python"
+        },
+        {
+          "foreground": "#a6da95",
+          "style": "plain",
+          "template": " \ue738 {{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }} ",
+          "trailing_diamond": "\ue0b4 ",
+          "type": "java"
+        },
+        {
+          "foreground": "#a6da95",
+          "style": "plain",
+          "template": " \ue77f {{ if .Unsupported }}\uf071{{ else }}{{ .Full }}{{ end }} ",
+          "trailing_diamond": "\ue0b4 ",
+          "type": "dotnet"
+        },
+        {
+          "foreground": "#a6da95",
+          "style": "plain",
+          "template": " \ue626 {{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }} ",
+          "trailing_diamond": "\ue0b4 ",
+          "type": "go"
+        },
+        {
+          "foreground": "#a6da95",
+          "style": "plain",
+          "template": " \ue7a8 {{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }} ",
+          "trailing_diamond": "\ue0b4 ",
+          "type": "rust"
+        },
+        {
+          "foreground": "#a6da95",
+          "style": "plain",
+          "template": " \ue791 {{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }} ",
+          "trailing_diamond": "\ue0b4 ",
+          "type": "ruby"
+        },
+        {
+          "foreground": "#8bd5ca",
+          "options": {
+            "style": "roundrock",
+            "threshold": 0
+          },
+          "style": "plain",
+          "template": " \ueba2 {{ .FormattedMs }} ",
+          "leading_diamond": "\ue0b6",
+          "trailing_diamond": "\ue0b4",
+          "type": "executiontime"
+        }
+      ],
+      "type": "prompt"
+    },
+    {
+      "alignment": "left",
+      "newline": true,
+      "segments": [
+        {
+          "foreground": "#c6a0f6",
+          "style": "plain",
+          "template": "\u2570\u2500",
+          "type": "text"
+        },
+        {
+          "foreground": "#cad3f5",
+          "foreground_templates": ["{{ if gt .Code 0 }}#ed8796{{ end }}"],
+          "style": "plain",
+          "options": {
+            "always_enabled": true
+          },
+          "template": " \ue285 ",
+          "type": "status"
+        }
+      ],
+      "type": "prompt"
+    }
+  ],
+  "version": 4
+}
